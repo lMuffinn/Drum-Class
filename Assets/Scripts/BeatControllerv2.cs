@@ -13,7 +13,7 @@ public class BeatControllerv2 : MonoBehaviour
 {
 
     public List<AudioClip> sounds;
-    public List<beat> beats;
+    //public List<beat> beats;
     public int currentBeat = 0;
     float time;
     public float delay = 3;
@@ -42,14 +42,14 @@ public class BeatControllerv2 : MonoBehaviour
             {
                 started = true;
             }
-            if (!end && beats.Count > 0)
+            //if (!end && beats.Count > 0)
             {
                 //if (time >= beats[currentBeat].time)
                 {
                     //instrument.clip = sounds[beats[currentBeat].sound];
                     instrument.Play();
                     currentBeat++;
-                    if (currentBeat == beats.Count)
+                    //if (currentBeat == beats.Count)
                     {
                         end = true;
                     }

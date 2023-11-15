@@ -1,19 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-[System.Serializable]
-public struct beat
-{
-    public bool play;
-    public AudioClip clip;
-}
-
 public class BeatController : MonoBehaviour
 {
 
     public float bpm = 60;
-    public List<beat> beats;
+    public List<GameObject> beats;
     float secPerBeat;
     float seconds = 0;
     AudioSource sound;
@@ -21,6 +13,7 @@ public class BeatController : MonoBehaviour
     public float buffer = 0.1f;
     float buffTimer = 0;
     bool hit;
+    int lastCur =0;
 
 
     // Start is called before the first frame update
@@ -39,33 +32,37 @@ public class BeatController : MonoBehaviour
         // Set the buffer time to 2* the buffer to allow for space before and after for the user to press the button
         if (seconds >= secPerBeat - buffer && buffTimer <= 0)
         {
-            if (beats[current].play == true)
+            if (beats[current] != null)
             {
                 buffTimer = buffer * 2;
                 hit = false;
             }
         }
         //Detects if the player presses the button at the right time
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (beats[lastCur] != null)
         {
-            if (buffTimer > 0 && hit == false)
+            if (Input.GetKeyDown(beats[lastCur].GetComponent<Instrument>().key))
             {
-                Debug.Log("Nice!");
-                hit = true;
-            }
-            else
-            {
-                Debug.Log("Miss :(");
+                if (buffTimer > 0 && hit == false)
+                {
+                    Debug.Log("Nice!");
+                    hit = true;
+                }
+                else
+                {
+                    Debug.Log("Miss :(");
+                }
             }
         }
         //Play a sound if the checkmark for the current beat is checked
         if (seconds >= secPerBeat)
         {
-            if (beats[current].play == true)
+            if (beats[current] != null)
             {
-                sound.clip = beats[current].clip;
+                sound.clip = beats[current].GetComponent<Instrument>().sound;
                 sound.Play();
             }
+            lastCur = current;
             current++;
             seconds -= secPerBeat;
         }
