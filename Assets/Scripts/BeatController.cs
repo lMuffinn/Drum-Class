@@ -39,7 +39,7 @@ public class BeatController : MonoBehaviour
             }
         }
         //Detects if the player presses the button at the right time
-        if (beats[lastCur] != null)
+        if (Input.anyKeyDown)
         {
             if (Input.GetKeyDown(beats[lastCur].GetComponent<Instrument>().key))
             {
@@ -48,20 +48,18 @@ public class BeatController : MonoBehaviour
                     Debug.Log("Nice!");
                     hit = true;
                 }
-                else
-                {
-                    Debug.Log("Miss :(");
-                }
+            }
+            else
+            {
+                Debug.Log("Miss :(");
+
             }
         }
         //Play a sound if the checkmark for the current beat is checked
         if (seconds >= secPerBeat)
         {
-            if (beats[current] != null)
-            {
-                sound.clip = beats[current].GetComponent<Instrument>().sound;
-                sound.Play();
-            }
+            sound.clip = beats[current].GetComponent<Instrument>().sound;
+            sound.Play();
             lastCur = current;
             current++;
             seconds -= secPerBeat;
