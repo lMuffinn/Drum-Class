@@ -47,3 +47,4 @@ MonoBehaviour:
   key: 274
   sound: {fileID: 8300000, guid: 3341727eddd3b694c8ceab5c1ab0beeb, type: 3}
   image: {fileID: 0}
+  play: 1
