@@ -46,5 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: 275
   sound: {fileID: 8300000, guid: bbb3d39f7655a234480d385c57570616, type: 3}
-  image: {fileID: 0}
+  image: {fileID: 6434152128345176110, guid: b8d26e69ec2ffd742803108993f462d9, type: 3}
   play: 1
