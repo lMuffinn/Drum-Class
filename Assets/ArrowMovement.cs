@@ -12,6 +12,7 @@ public class ArrowMovement : MonoBehaviour
     double timePassed = 0;
     Vector2 startPos;
     Vector2 targetPos;
+    public bool empty = false;
 
 
     // Start is called before the first frame update
@@ -21,6 +22,7 @@ public class ArrowMovement : MonoBehaviour
         startPos = GetComponent<Transform>().position;
         targetPos = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>().position;
         tr = GetComponent<Transform>();
+        if (empty) Destroy(this.gameObject);
     }
 
     // Update is called once per frame
@@ -31,7 +33,7 @@ public class ArrowMovement : MonoBehaviour
         oldTick = newTick;
         timePassed += timeBetweenTicks;
         tr.position = new Vector2(position(startPos.x, targetPos.x), position(startPos.y, targetPos.y));
-        if (timePassed > totalTime) Destroy(this.gameObject);
+        //if (timePassed > totalTime) Destroy(this.gameObject);
     }
 
     float position(float startVar,float targetVar)

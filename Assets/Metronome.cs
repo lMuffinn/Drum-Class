@@ -9,30 +9,31 @@ public class Metronome : MonoBehaviour
     double timeBetweenTicks;
     double timeFromLastTick = 0;
     double timePerBeat;
-    bool soundPlayed = false;
     public double bpm = 80;
     public List<Instrument> beats;
     Queue<Instrument> beatQueue = new Queue<Instrument>();
     Instrument currentBeat;
-    AudioSource audioSource;
     //Tolerance
     public double tolerance = 0.1;
-    bool canHit = false;
-    bool hit = false;
-    double hitTimer = 0;
+    public float timeBeforeHit = 1;
+    public bool gameLeader = false;
+    public double timeFromStart = 0;
+    public AudioSource audioSource;
+    public double StartDelay = 2;
+    public GameObject dummyBeat;
 
     // Start is called before the first frame update
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
         oldTick = AudioSettings.dspTime;
         timePerBeat = 60 / bpm;
+        audioSource = GetComponent<AudioSource>();
         foreach (Instrument beat in beats)
         {
             //Debug.Log(beat);
             beatQueue.Enqueue(beat);
         }
-        NextBeat();
+        //NextBeat();
     }
 
     // Update is called once per frame
@@ -43,58 +44,44 @@ public class Metronome : MonoBehaviour
         timeBetweenTicks = newTick - oldTick;
         oldTick = newTick;
         timeFromLastTick += timeBetweenTicks;
-        hitTimer -= timeBetweenTicks;
-
-        //Tolerance.
-        if (timeFromLastTick >= timePerBeat - tolerance * 3 && !canHit) hitTimer = tolerance * 2;
-        //if (canHit && hitTimer <= 0 && !hit && currentBeat.play) Debug.Log("missed");
-        canHit = (hitTimer > 0);
-        if (!canHit) 
-        {
-            hit = false; 
-        }
-
-        //Button Presses.
-        if (Input.anyKeyDown)
-        {
-            if (!currentBeat.play) Debug.Log("missed");
-            else
-            {
-                if (canHit && Input.GetKeyDown(currentBeat.key) && !hit)
-                {
-                    Debug.Log("hit!");
-                    hit = true;
-                }
-                else Debug.Log("missed");
-            }
-        }
-
-        //Play sound.
-        if (timeFromLastTick >= timePerBeat - 2*tolerance && !soundPlayed)
-        {
-            //Play Beat.
-            audioSource.clip = currentBeat.sound;
-            audioSource.Play();
-            soundPlayed = true;
-        }
+        timeFromStart += timeBetweenTicks;
+        //Debug.Log("Time from start: " + timeFromStart);
 
         //Cycle through beats. -------------------------
         if (timeFromLastTick >= timePerBeat)
         {
-            //Reset Tick Timer. 
+            //Reset Tick Timer.
             timeFromLastTick -= timePerBeat;
             //Shift to next beat.
             NextBeat();
-            soundPlayed = false;
         }
     }
 
     void NextBeat()
     {
-        currentBeat = beatQueue.Dequeue();
-        beatQueue.Enqueue(currentBeat);
-        GameObject imageClone;
-        imageClone = Instantiate(beatQueue.Peek().image);
-        imageClone.GetComponent<ArrowMovement>().totalTime = 2*timePerBeat - tolerance;
+        if (gameLeader)
+        {
+            if (timeFromStart >= StartDelay)
+            {
+                currentBeat = beatQueue.Dequeue();
+                beatQueue.Enqueue(currentBeat);
+                GameObject imageClone;
+                imageClone = Instantiate(beatQueue.Peek().gameObject);
+                imageClone.GetComponent<ArrowMovement>().totalTime = timeBeforeHit;
+            }
+        }
+        if (!gameLeader)
+        {
+            if (timeFromStart >= StartDelay)
+            {
+                currentBeat = beatQueue.Dequeue();
+                beatQueue.Enqueue(currentBeat);
+                GameObject imageClone;
+                imageClone = Instantiate(dummyBeat);
+                imageClone.GetComponent<dummyBeat>().totalTime = timeBeforeHit;
+                imageClone.GetComponent<dummyBeat>().audioClip = currentBeat.sound;
+                imageClone.GetComponent<dummyBeat>().empty = currentBeat.GetComponent<ArrowMovement>().empty;
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Country
   - Target
+  - Beat
   layers:
   - Default
   - TransparentFX

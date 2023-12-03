@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: 6434152128345176096}
   m_Layer: 0
   m_Name: RIght Arrow
-  m_TagString: Untagged
+  m_TagString: Beat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -215,3 +215,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   totalTime: 10
+  empty: 0
