@@ -46,9 +46,13 @@ public class Metronome : MonoBehaviour
         hitTimer -= timeBetweenTicks;
 
         //Tolerance.
-        if (timeFromLastTick >= timePerBeat - tolerance * 2 && !canHit) hitTimer = tolerance * 2;
+        if (timeFromLastTick >= timePerBeat - tolerance * 3 && !canHit) hitTimer = tolerance * 2;
+        //if (canHit && hitTimer <= 0 && !hit && currentBeat.play) Debug.Log("missed");
         canHit = (hitTimer > 0);
-        if (!canHit) hit = false;
+        if (!canHit) 
+        {
+            hit = false; 
+        }
 
         //Button Presses.
         if (Input.anyKeyDown)
@@ -66,7 +70,7 @@ public class Metronome : MonoBehaviour
         }
 
         //Play sound.
-        if (timeFromLastTick >= timePerBeat - tolerance && !soundPlayed)
+        if (timeFromLastTick >= timePerBeat - 2*tolerance && !soundPlayed)
         {
             //Play Beat.
             audioSource.clip = currentBeat.sound;
@@ -90,11 +94,7 @@ public class Metronome : MonoBehaviour
         currentBeat = beatQueue.Dequeue();
         beatQueue.Enqueue(currentBeat);
         GameObject imageClone;
-        try
-        {
-            imageClone = Instantiate(currentBeat.image);
-            imageClone.GetComponent<ArrowMovement>().totalTime = timePerBeat - tolerance;
-        }
-        finally { }
+        imageClone = Instantiate(beatQueue.Peek().image);
+        imageClone.GetComponent<ArrowMovement>().totalTime = 2*timePerBeat - tolerance;
     }
 }
